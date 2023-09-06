@@ -3,9 +3,11 @@ services:
   # Back express
   express-api:
     container_name: express-api
+    networks:
+      - tp-docker-network
     image: express-api:dev
     build:
-      context: server
+      context: server/
       dockerfile: Dockerfile
       target: dev
     ports:
@@ -19,12 +21,15 @@ services:
   # Front react
   react-app:
     container_name: react-app
+    networks:
+      - tp-docker-network
     image: react-app:dev
     build:
-      context: client
+      context: client/
       dockerfile: Dockerfile
+      target: dev
     ports:
-      - "5173:5000"
+      - "5173:5173"
     volumes:
       - ./client:/developer
     tty: true
