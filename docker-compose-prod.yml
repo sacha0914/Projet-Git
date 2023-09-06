@@ -1,0 +1,48 @@
+version: '3.9'
+services:
+  # Back express
+  express-api:
+    container_name: express-api
+    networks:
+      - tp-docker-network
+    image: express-api:prod
+    build:
+      context: server/
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/developer
+    depends_on:  
+      - mongo-prod
+
+  # Front react
+  react-app:
+    container_name: react-app
+    networks:
+      - tp-docker-network
+    image: react-app:prod
+    build:
+      context: client/
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - "8080:80"
+
+  # MongoDB
+  mongo-prod:
+    networks:
+      - tp-docker-network
+    image: mongodb/mongodb-community-server:7.0.0-ubi8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-dev-data:/data/db # Volume persistante pour les données de MongoDB.
+
+
+volumes:
+  mongo-dev-data: 
+
+networks:
+  tp-docker-network:  
