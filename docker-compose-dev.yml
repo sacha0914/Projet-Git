@@ -1,0 +1,48 @@
+version: '3.9'
+services:
+  # Back express
+  express-api:
+    container_name: express-api
+    image: express-api:dev
+    build:
+      context: server
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/developer
+    depends_on:  
+      - mongo-dev
+    tty: true
+
+  # Front react
+  react-app:
+    container_name: react-app
+    image: react-app:dev
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5000"
+    volumes:
+      - ./client:/developer
+    tty: true
+
+
+  # MongoDB
+  mongo-dev:
+    container_name: mongo-dev
+    networks:
+      - tp-docker-network
+    image: mongodb/mongodb-community-server:7.0.0-ubi8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-dev-data:/data/db
+
+volumes:
+  mongo-dev-data: 
+
+networks:
+  tp-docker-network:  
